@@ -337,7 +337,7 @@ socket.on("connect", function () {
         msm: 1663314,
         prb: 726,
         startTime: 1399035600,
-        speed: 50
+        speed: 100
     });
 });
 

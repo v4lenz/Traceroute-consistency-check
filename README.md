@@ -24,4 +24,4 @@ Then visit:
 
 	localhost:8000
 
-Enjoy!
+Wait a bit and enjoy!

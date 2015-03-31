@@ -11,8 +11,12 @@ A traceroute path changes over time due to many reasons:
 * Link failures
 * ...
 
-I want to visually understand how consistent traceroute paths are.
-To do so I'm drawing a traceroute path and I'm color-coding each node based on its consistency over time. The path gets updated through the new [RIPE Atlas Streaming API](https://atlas.ripe.net/docs/result-streaming/).
+The objective is to visually understand how consistent traceroute paths are.
+To do so this tool draws a traceroute path and color-codes each node based on its consistency over time. The path gets updated through the new [RIPE Atlas Streaming API](https://atlas.ripe.net/docs/result-streaming/).
+
+This is an example
+
+![Example](http://www.vdidonato.it/images/Traceroute-stability-check.png)
 
 ## Usage
 

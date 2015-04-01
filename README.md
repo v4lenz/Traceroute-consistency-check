@@ -29,3 +29,9 @@ Then visit:
 	localhost:8000
 
 Wait a bit and enjoy!
+
+
+## known bugs
+
+* Asterisks in the path are treated aggregated into a single node
+* After some time, the layout becomes really unstable

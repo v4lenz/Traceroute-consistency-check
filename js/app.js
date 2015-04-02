@@ -4,7 +4,7 @@ var consistency = {};
 function MyGraph(el) {
 
     var randomColor = d3.scale.category20();
-    var color = d3.scale.linear().range(["red", "white", "green"]);
+    var color = d3.scale.linear().range(["red", "yellow", "green"]);
 
     // set up the D3 visualisation in the specified element
     var w = window.innerWidth,
@@ -147,24 +147,26 @@ function MyGraph(el) {
             return node["probe"] == true
         })
             .append("svg:circle")
+            .attr("stroke", "black")
             .attr("r", 20)
             .attr("id", function (d) {
                 return "Node;" + d.id
             })
             .attr("class", "probeCircle")
-            .attr("fill", "yellow");
+            .attr("fill", "white");
 
         // Target
         nodeEnter.filter(function (node) {
             return node["target"] == true
         })
             .append("svg:circle")
+            .attr("stroke", "black")
             .attr("r", 20)
             .attr("id", function (d) {
                 return "Node;" + d.id;
             })
             .attr("class", "probeCircle")
-            .attr("fill", "blue");
+            .attr("fill", "white");
 
 
         // Other nodes
@@ -180,7 +182,9 @@ function MyGraph(el) {
             .attr("stroke", "black")
             .attr("fill", function (d) {
                 return color(d.occurs);
-            });
+            })
+            .append("svg:title")
+            .text(function(d) { return d.id});
 
         // Text in nodes
         // Probe
@@ -231,11 +235,11 @@ function MyGraph(el) {
 
         // Restart the force layout
         force
-            .gravity(.05)
-            .linkDistance(1)
-            .linkStrength(0.9)
-            .charge(-1000)
-            .chargeDistance(600)
+            //.gravity(.05)
+            //.linkDistance(1)
+            //.linkStrength(0.9)
+            .charge(-2000)
+            //.chargeDistance(600)
             .size([w, h])
             .start();
     };
@@ -342,6 +346,7 @@ socket.on("connect", function () {
 });
 
 socket.on("atlas_result", function (result) {
+    console.log("Received result: ", result);
     updateGraph(result)
 });
 

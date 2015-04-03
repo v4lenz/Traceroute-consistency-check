@@ -94,7 +94,7 @@ function MyGraph(el) {
     // The Node.appendChild() does not add a new child if the argument comes from a selection.
     // For more details visit: https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
     this.keepNodesOnTop = function () {
-        d3.selectAll(".probeCircle").each(function (d, i) {
+        d3.selectAll(".circle").each(function (d, i) {
             var gnode = this.parentNode;
             gnode.parentNode.appendChild(gnode);
         });
@@ -128,70 +128,40 @@ function MyGraph(el) {
 
         link.exit().remove();
 
+
+
         // Nodes
         var node = vis.selectAll("g.node")
             .data(nodes, function (d) {
                 return d.id;
             });
 
+        // Nodes: Update
         var nodeUpdate = node.select("circle")
             .filter(function(d) { return d["probe"] == false && d["target"] == false})
             .attr("fill", function(d) { return color(d["occurs"])});
 
+
+        // Nodes: Enter
         var nodeEnter = node.enter().append("g")
             .attr("class", "node")
             .call(force.drag);
 
-        // Probe
-        nodeEnter.filter(function (node) {
+        // Nodes, Probe: Enter
+        var probeEnter = nodeEnter.filter(function (node) {
             return node["probe"] == true
-        })
+        });
+        probeEnter
             .append("svg:circle")
             .attr("stroke", "black")
             .attr("r", 20)
             .attr("id", function (d) {
                 return "Node;" + d.id
             })
-            .attr("class", "probeCircle")
+            .attr("class", "circle")
             .attr("fill", "white");
 
-        // Target
-        nodeEnter.filter(function (node) {
-            return node["target"] == true
-        })
-            .append("svg:circle")
-            .attr("stroke", "black")
-            .attr("r", 20)
-            .attr("id", function (d) {
-                return "Node;" + d.id;
-            })
-            .attr("class", "probeCircle")
-            .attr("fill", "white");
-
-
-        // Other nodes
-        nodeEnter.filter(function (node) {
-            return node["target"] == false && node["probe"] == false
-        })
-            .append("svg:circle")
-            .attr("r", 18)
-            .attr("id", function (d) {
-                return "Node;" + d.id;
-            })
-            .attr("class", "probeCircle")
-            .attr("stroke", "black")
-            .attr("fill", function (d) {
-                return color(d.occurs);
-            })
-            .append("svg:title")
-            .text(function(d) { return d.id});
-
-        // Text in nodes
-        // Probe
-        nodeEnter.filter(function (node) {
-            return node["probe"] == true
-        })
-            .append("svg:text")
+        probeEnter.append("svg:text")
             .attr("class", "textClassBlack")
             .attr("x", -10)
             .attr("y", ".31em")
@@ -199,10 +169,60 @@ function MyGraph(el) {
                 return d.id
             });
 
-        // Other nodes (target included)
-        nodeEnter.filter(function (node) {
-            return node["probe"] == false
-        })
+
+        // Nodes, Target: Enter
+        var targetEnter = nodeEnter.filter(function (node) {
+            return node["target"] == true
+        });
+
+        targetEnter
+            .append("svg:circle")
+            .attr("stroke", "black")
+            .attr("r", 20)
+            .attr("id", function (d) {
+                return "Node;" + d.id;
+            })
+            .attr("class", "circle")
+            .attr("fill", "white");
+
+        targetEnter.append("svg:text")
+            .attr("class", "textClassBlack")
+            .attr("x", -10)
+            .attr("y", ".31em")
+            .text(function (d) {
+                return lastByte(d.id)
+            });
+
+        targetEnter
+            .append("svg:circle")
+            .attr("r", 18)
+            .attr("id", function (d) {
+                return "Node;" + d.id;
+            })
+            .attr("class", "circle")
+            .attr("opacity", 0)
+            .append("svg:title")
+            .text(function(d) { return d.id});
+
+
+        // Nodes, Hops: Enter
+        var hopsEnter = nodeEnter.filter(function (node) {
+            return node["target"] == false && node["probe"] == false
+        });
+
+        hopsEnter
+            .append("svg:circle")
+            .attr("r", 18)
+            .attr("id", function (d) {
+                return "Node;" + d.id;
+            })
+            .attr("class", "circle")
+            .attr("stroke", "black")
+            .attr("fill", function (d) {
+                return color(d.occurs);
+            });
+
+        hopsEnter
             .append("svg:text")
             .attr("class", "textClass")
             .attr("x", -10)
@@ -211,6 +231,19 @@ function MyGraph(el) {
                 return lastByte(d.id)
             });
 
+        hopsEnter
+            .append("svg:circle")
+            .attr("r", 18)
+            .attr("id", function (d) {
+                return "Node;" + d.id;
+            })
+            .attr("class", "circle")
+            .attr("opacity", 0)
+            .append("svg:title")
+            .text(function(d) { return d.id});
+
+
+        // Nodes: Exit
         node.exit().remove();
         force.on("tick", function () {
 
@@ -235,11 +268,11 @@ function MyGraph(el) {
 
         // Restart the force layout
         force
-            //.gravity(.05)
-            //.linkDistance(1)
-            //.linkStrength(0.9)
+            //.gravity(0)
+            //.linkDistance(5) // Target length: Defaults to 20
+            //.linkStrength() // Rigidity: Defaults to 1
             .charge(-2000)
-            //.chargeDistance(600)
+            //.chargeDistance() // Defaults to Infinity
             .size([w, h])
             .start();
     };
@@ -341,7 +374,7 @@ socket.on("connect", function () {
         msm: 1663314,
         prb: 726,
         startTime: 1399035600,
-        speed: 100
+        speed: 50
     });
 });
 

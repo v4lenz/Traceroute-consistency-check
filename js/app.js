@@ -94,9 +94,8 @@ function MyGraph(el) {
     // The Node.appendChild() does not add a new child if the argument comes from a selection.
     // For more details visit: https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
     this.keepNodesOnTop = function () {
-        d3.selectAll(".circle").each(function (d, i) {
-            var gnode = this.parentNode;
-            gnode.parentNode.appendChild(gnode);
+        d3.selectAll(".node").each(function (d, i) {
+            this.parentNode.appendChild(this);
         });
     };
 
@@ -129,7 +128,6 @@ function MyGraph(el) {
         link.exit().remove();
 
 
-
         // Nodes
         var node = vis.selectAll("g.node")
             .data(nodes, function (d) {
@@ -137,10 +135,9 @@ function MyGraph(el) {
             });
 
         // Nodes: Update
-        var nodeUpdate = node.select("circle")
+        var nodeUpdate = node.select(".hopColoredCircle")
             .filter(function(d) { return d["probe"] == false && d["target"] == false})
             .attr("fill", function(d) { return color(d["occurs"])});
-
 
         // Nodes: Enter
         var nodeEnter = node.enter().append("g")
@@ -158,7 +155,7 @@ function MyGraph(el) {
             .attr("id", function (d) {
                 return "Node;" + d.id
             })
-            .attr("class", "circle")
+            .attr("class", "probeColoredCircle")
             .attr("fill", "white");
 
         probeEnter.append("svg:text")
@@ -168,6 +165,18 @@ function MyGraph(el) {
             .text(function (d) {
                 return d.id
             });
+
+        probeEnter
+            .append("svg:circle")
+            .attr("r", 18)
+            .attr("id", function (d) {
+                return "Node;" + d.id;
+            })
+            .attr("class", "probeTransparentCircle")
+            .attr("opacity", 0)
+            .append("svg:title")
+            .text(function(d) { return d.id});
+
 
 
         // Nodes, Target: Enter
@@ -182,7 +191,7 @@ function MyGraph(el) {
             .attr("id", function (d) {
                 return "Node;" + d.id;
             })
-            .attr("class", "circle")
+            .attr("class", "targetColoredCircle")
             .attr("fill", "white");
 
         targetEnter.append("svg:text")
@@ -199,7 +208,7 @@ function MyGraph(el) {
             .attr("id", function (d) {
                 return "Node;" + d.id;
             })
-            .attr("class", "circle")
+            .attr("class", "targetTransparentCircle")
             .attr("opacity", 0)
             .append("svg:title")
             .text(function(d) { return d.id});
@@ -216,7 +225,7 @@ function MyGraph(el) {
             .attr("id", function (d) {
                 return "Node;" + d.id;
             })
-            .attr("class", "circle")
+            .attr("class", "hopColoredCircle")
             .attr("stroke", "black")
             .attr("fill", function (d) {
                 return color(d.occurs);
@@ -237,10 +246,10 @@ function MyGraph(el) {
             .attr("id", function (d) {
                 return "Node;" + d.id;
             })
-            .attr("class", "circle")
+            .attr("class", "hopTransparentCircle")
             .attr("opacity", 0)
             .append("svg:title")
-            .text(function(d) { return d.id});
+            .text(function(d) { return "ip: " + d.id + "\n" + "occurs: " + d.occurs + " times"});
 
 
         // Nodes: Exit
@@ -271,8 +280,8 @@ function MyGraph(el) {
             //.gravity(0)
             //.linkDistance(5) // Target length: Defaults to 20
             //.linkStrength() // Rigidity: Defaults to 1
-            .charge(-2000)
             //.chargeDistance() // Defaults to Infinity
+            .charge(-2000)
             .size([w, h])
             .start();
     };
@@ -374,7 +383,7 @@ socket.on("connect", function () {
         msm: 1663314,
         prb: 726,
         startTime: 1399035600,
-        speed: 50
+        speed: 100
     });
 });
 

@@ -112,6 +112,7 @@ function MyGraph(el) {
     this.update = function () {
 
         updateColorScaleDomain();
+        var duration = 3000;
 
         // Links
         var link = vis.selectAll(".link")
@@ -119,11 +120,17 @@ function MyGraph(el) {
                 return d.source.id + "-" + d.target.id;
             });
 
+
         link.enter().append("line")
             .attr("id", function (d) {
                 return d.source.id + "-" + d.target.id;
             })
-            .attr("class", "link");
+            .attr("class", "link")
+            .attr("opacity", 0)
+            .transition().duration(duration).attr("opacity", 1);
+
+        // Links: Enter + Update
+        // TODO
 
         link.exit().remove();
 
@@ -229,7 +236,9 @@ function MyGraph(el) {
             .attr("stroke", "black")
             .attr("fill", function (d) {
                 return color(d.occurs);
-            });
+            })
+            .attr("opacity", 0)
+            .transition().duration(duration).attr("opacity", 1);
 
         hopsEnter
             .append("svg:text")
@@ -238,7 +247,10 @@ function MyGraph(el) {
             .attr("y", ".31em")
             .text(function (d) {
                 return lastByte(d.id)
-            });
+            })
+            .attr("opacity", 0)
+            .transition().duration(duration).attr("opacity", 1);
+
 
         hopsEnter
             .append("svg:circle")
@@ -249,7 +261,7 @@ function MyGraph(el) {
             .attr("class", "hopTransparentCircle")
             .attr("opacity", 0)
             .append("svg:title")
-            .text(function(d) { return "ip: " + d.id + "\n" + "occurs: " + d.occurs + " times"});
+            .text(function(d) { return "ip: " + d.id + "\n" + "occurs: " + d.occurs + " times"})
 
 
         // Nodes: Exit
@@ -366,9 +378,6 @@ function updateGraph(data) {
     graph.keepNodesOnTop();
 
 }
-
-
-
 
 
 // Main

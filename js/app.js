@@ -393,36 +393,33 @@ var get_params = function(search_string) {
       params[key] = [].concat(params[key], value);
     }
     return pairs.length == 1 ? params : parse(params, pairs.slice(1))
-  }
+  };
   // Get rid of leading ?
   return search_string.length == 0 ? {} : parse({}, search_string.substr(1).split('&'));
-}
+};
+
+
 var params = get_params(location.search);
-
-
-function remove_trailing_slash(url) {
-	return url.replace(/\/$/, '');
-}
-
 // Main
+var msm, prb, start;
 
 // Build variables
 if (params.msm) {
-    var msm = remove_trailing_slash(params.msm);
+    msm = removeTrailingSlash(params.msm);
 } else { 
-    var msm = 1663314;
+    msm = 1663314;
 }
 
 if (params.prb) {
-	var prb = remove_trailing_slash(params.prb);
+	prb = removeTrailingSlash(params.prb);
 } else { 
-    var prb = 726;
+    prb = 726;
 }
 
 if (params.start) {
-	var start = remove_trailing_slash(params.start);
+	start = removeTrailingSlash(params.start);
 } else { 
-    var start = 1399035600;
+    start = 1399035600;
 }
 
 // Create a socket and connect to the streaming service

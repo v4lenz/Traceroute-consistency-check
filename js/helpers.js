@@ -8,3 +8,7 @@ function lastByte (ip){
     if (lastFour.indexOf(".") == 2) { return lastFour.slice(-2)}
     return ip
 }
+
+function removeTrailingSlash(url) {
+    return url.replace(/\/$/, '');
+}

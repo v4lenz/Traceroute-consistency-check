@@ -1,4 +1,4 @@
-# Traceroute-consistency-check
+# Traceroute-consistency-check
 
 This tool was initiated at the first RIPE Atlas Hackathon in March 2015 and won the third prize.
 

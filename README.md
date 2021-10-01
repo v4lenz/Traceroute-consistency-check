@@ -17,7 +17,8 @@ The path gets updated through the new [RIPE Atlas Streaming API](https://atlas.r
 
 ## Example
 
-![image](https://labs.ripe.net/Members/becha/ScreenShot20150401at11.17.35.png)
+![Screen_Shot_2015-04-01_at_11 17 35 width-800](https://user-images.githubusercontent.com/4520928/135593791-f9220c2f-2e63-4fda-8c01-471e0bb8e07b.png)
+
 
 ## Usage
 
